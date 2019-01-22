@@ -4,14 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MyAboutActivity"
     android:orientation="vertical"
-    tools:context=".AboutActivity">
-<android.support.v7.widget.Toolbar
-    android:id="@+id/toolbar"
-    android:background="@color/colorPrimary"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-</android.support.v7.widget.Toolbar>
+    tools:showIn="@layout/activity_my_about">
     <ImageView
         android:layout_marginTop="100dp"
         android:layout_gravity="center_horizontal"

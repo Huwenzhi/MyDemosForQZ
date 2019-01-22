@@ -1,21 +1,18 @@
 package com.example.apk1util;
 
-import android.os.Build;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
-
-public class AboutActivity extends AppCompatActivity {
+public class MyAboutActivity extends AppCompatActivity {
     Toolbar mToolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
+        setContentView(R.layout.activity_my_about);
         mToolbar =findViewById(R.id.toolbar);
         //是否显示
         mToolbar.setTitle("关于");
@@ -29,8 +26,6 @@ public class AboutActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
     }
+
 }
