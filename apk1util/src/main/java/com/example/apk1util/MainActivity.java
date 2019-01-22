@@ -100,13 +100,13 @@ public class MainActivity extends AppCompatActivity {
                 new AlertDialog.Builder(this).setTitle("授权通知").setMessage("请找到" + getString(R.string.app_name)
                         + "点击开启“允许安装应用”，如不开启应用无法安装，感谢配合！")
                         .setPositiveButton("去开启", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                        //请求安装未知应用来源的权限
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, 102);
-                    }
-                }).setNegativeButton("算了",null).show();
+                                //请求安装未知应用来源的权限
+                                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.REQUEST_INSTALL_PACKAGES}, 102);
+                            }
+                        }).setNegativeButton("算了", null).show();
             }
         } else {
             //安装
@@ -155,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
                     if (!dialog.isShowing()) {
                         dialog.show();
                     }
-                    ;
                 }
             }
         });
@@ -225,36 +224,14 @@ public class MainActivity extends AppCompatActivity {
     private void install() {
         if (pos != -1) {
             Apk1Info apk1Info = list.get(pos);
-            String newPath = Environment.getExternalStorageDirectory() + File.separator + "ic_launcher";
+            String newPath = Environment.getExternalStorageDirectory() + File.separator + "apk1";
             File appDir = new File(newPath);
             if (!appDir.exists()) {
                 appDir.mkdir();
             }
             String fileName = apk1Info.getName() + "-" + apk1Info.getVersionName() + "-" + apk1Info.getVersionCode() + ".apk";
             if (!fileIsExists(newPath + File.separator + fileName)) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (dialog != null) {
-                            if (!dialog.isShowing()) {
-                                dialog.show();
-                            }
-                            ;
-                        }
-                    }
-                });
                 copyFile(apk1Info.getPath(), newPath + File.separator + fileName);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (dialog != null) {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-                            ;
-                        }
-                    }
-                });
             }
             File file = new File(newPath + File.separator + fileName);
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -307,18 +284,20 @@ public class MainActivity extends AppCompatActivity {
                 }
                 inStream.close();
                 if (dialog != null) {
-                    dialog.dismiss();
+                    if (dialog.isShowing()){
+                        dialog.dismiss();
+                    }
                 }
             }
         } catch (Exception e) {
             if (dialog != null) {
-                dialog.dismiss();
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
             }
             System.out.println("复制单个文件操作出错");
             Toast.makeText(this, "出错了，请联系87683202@qq.com", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-
-
         }
 
     }
@@ -392,31 +371,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    /**
-     * 获取apk包的信息：版本号，名称，图标等
-     *
-     * @param absPath apk包的绝对路径
-     * @param context
-     */
-    public void apkInfo(String absPath, Context context) {
-        PackageManager pm = context.getPackageManager();
-        PackageInfo pkgInfo = pm.getPackageArchiveInfo(absPath, PackageManager.GET_ACTIVITIES);
-        if (pkgInfo != null) {
-            ApplicationInfo appInfo = pkgInfo.applicationInfo;
-            /* 必须加这两句，不然下面icon获取是default icon而不是应用包的icon */
-            appInfo.sourceDir = absPath;
-            appInfo.publicSourceDir = absPath;
-            String appName = pm.getApplicationLabel(appInfo).toString();// 得到应用名
-            String packageName = appInfo.packageName; // 得到包名
-            String version = pkgInfo.versionName; // 得到版本信息
-            /* icon1和icon2其实是一样的 */
-            Drawable icon1 = pm.getApplicationIcon(appInfo);// 得到图标信息
-            Drawable icon2 = appInfo.loadIcon(pm);
-            String pkgInfoStr = String.format("PackageName:%s, Vesion: %s, AppName: %s", packageName, version, appName);
-
-        }
-    }
-
-
 }
