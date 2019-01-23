@@ -227,6 +227,11 @@ public class MainActivity extends AppCompatActivity {
             if (!fileIsExists(newPath + File.separator + fileName)) {
                 copyFile(apk1Info.getPath(), newPath + File.separator + fileName);
             }
+            if (dialog != null) {
+                if (dialog.isShowing()){
+                    dialog.dismiss();
+                }
+            }
             File file = new File(newPath + File.separator + fileName);
             Intent intent = new Intent(Intent.ACTION_VIEW);
             // 仅需改变这一行
@@ -259,9 +264,15 @@ public class MainActivity extends AppCompatActivity {
      * @return boolean
      */
     public void copyFile(String oldPath, String newPath) {
-        if (dialog != null) {
-            dialog.show(this, "", "加载中……");
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (dialog != null) {
+                    dialog.show(MainActivity.this, "", "加载中……");
+                }
+            }
+        });
+
         try {
             int bytesum = 0;
             int byteread = 0;
@@ -277,18 +288,31 @@ public class MainActivity extends AppCompatActivity {
                     fs.write(buffer, 0, byteread);
                 }
                 inStream.close();
-                if (dialog != null) {
-                    if (dialog.isShowing()){
-                        dialog.dismiss();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dialog != null) {
+                            if (dialog.isShowing()){
+                                dialog.dismiss();
+                                Toast.makeText(MainActivity.this, "异常关闭", Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
-                }
+                });
+
             }
         } catch (Exception e) {
-            if (dialog != null) {
-                if (dialog.isShowing()){
-                    dialog.dismiss();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (dialog != null) {
+                        if (dialog.isShowing()){
+                            dialog.dismiss();
+                            Toast.makeText(MainActivity.this, "异常关闭", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
-            }
+            });
             System.out.println("复制单个文件操作出错");
             Toast.makeText(this, "出错了，请联系87683202@qq.com", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
